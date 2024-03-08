@@ -24,10 +24,13 @@
     <div>
         <table>
             <thead>
-                <td>ID</td>
-                <td>userID</td>
-                <td>Title</td>
-                <td>Body</td>
+                <tr>
+                    <td>ID</td>
+                    <td>PostID</td>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Body</td>
+                </tr>
             </thead>
             <tbody id="tbody">
 
@@ -40,16 +43,20 @@
             <input id='id' />
         </div>
         <div>
-            <p>userID</p>
-            <input id='userid' />
+            <p>PostID</p>
+            <input id='postId' />
         </div>
         <div>
-            <p>Title</p>
-            <input id='title' />
+            <p>Name</p>
+            <input id='name' />
         </div>
+        <div>
+            <p>Email</p>
+            <input id='email' />
+        </div>        
         <div>
             <p>Body</p>
-            <input id='body' />
+            <textarea id='commentBody'></textarea>
         </div>
         <button onclick="Save()">Save</button>
     </div>

@@ -6,22 +6,20 @@ U - PUT - hostname:port/api/v1/products/{id} (+data)
 D - DELETE - hostname:port/api/v1/products/{id}
 */
 //axios
-var url = "http://localhost:3000/posts";
+var url = "http://localhost:3000/comments"; // Điều chỉnh URL để trỏ đến "comments"
 var globalList;
-
-
 
 function Load() {
     fetch(url).then(
         function (response) {
             return response.json();
-        }).then(function (posts) {
-            posts.sort(Compare);
-            globalList = posts;
+        }).then(function (comments) {
+            comments.sort(Compare);
+            globalList = comments;
             let tbody = document.getElementById('tbody');
             tbody.innerHTML = "";
-            for (const post of posts) {
-                tbody.innerHTML += ConvertFromPostToRow(post);
+            for (const comment of comments) {
+                tbody.innerHTML += ConvertFromCommentToRow(comment);
             }
         })
 }
@@ -35,7 +33,7 @@ function Compare(a, b) {
 }
 
 function getMaxID() {
-    let ids = globalList.map(element => element.id)
+    let ids = globalList.map(element => parseInt(element.id));
     return Math.max(...ids);
 }
 
@@ -46,6 +44,7 @@ function Delete(id) {
         Load();
     })
 }
+
 function Create(data) {
     fetch(url, {
         method: 'POST',
@@ -71,50 +70,30 @@ function Edit(id, data) {
 }
 
 function Save() {
-    let id = parseInt(document.getElementById('id').value);
-    if (isNaN(id)) {
-        let newItem = {
-            id: (getMaxID() + 1) + "",
-            title: document.getElementById('title').value,
-            body: document.getElementById('body').value,
-            userId: document.getElementById('userid').value,
-        }
-        Create(newItem);
-        //create id = max +1
+    let id = document.getElementById('id').value;
+    let data = {
+        postId: document.getElementById('postId').value,
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        body: document.getElementById('commentBody').value,
+    };
+
+    if (id) {
+        Edit(id, data);
     } else {
-        if (checkExist(id)) {
-            let newItem = {
-                title: document.getElementById('title').value,
-                body: document.getElementById('body').value,
-                userId: document.getElementById('userid').value,
-            }
-            Edit(id, newItem);
-        } else {
-            let newItem = {
-                id: id + "",
-                title: document.getElementById('title').value,
-                body: document.getElementById('body').value,
-                userId: document.getElementById('userid').value,
-            }
-            Create(newItem);
-        }
+        data.id = (getMaxID() + 1).toString();
+        Create(data);
     }
 }
 
-function checkExist(id) {
-    let ids = globalList.map(function (element) {
-        return element.id
-    })
-    return ids.includes(id + '');
-}
-
-function ConvertFromPostToRow(post) {
+function ConvertFromCommentToRow(comment) {
     let string = '<tr>';
-    string += "<td>" + post.id + "</td>";
-    string += "<td>" + post.userId + "</td>";
-    string += "<td>" + post.title + "</td>";
-    string += "<td>" + post.body + "</td>";
-    string += '<td><button onclick="Delete(' + post.id + ')">Delete</button></td>';
+    string += "<td>" + comment.id + "</td>";
+    string += "<td>" + comment.postId + "</td>";
+    string += "<td>" + comment.name + "</td>";
+    string += "<td>" + comment.email + "</td>";
+    string += "<td>" + comment.body + "</td>";
+    string += '<td><button onclick="Delete(' + comment.id + ')">Delete</button></td>';
     string += '</tr>'
     return string;
 }
